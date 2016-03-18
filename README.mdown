@@ -3,7 +3,7 @@ A NPM package to send events to an [Open Metrics](https://github.com/gsabran/ope
 ## Example Usage
 
 ```js
-var OpenMetrics = require('open-metrics')('http://localhost:3000');
+var OpenMetrics = require('open-metrics')('http://yourOpenMetricsServerUrl.com');
 
 // log an event
 OpenMetrics.logEvent({userId: 'foo'}, 'hasLoggedIn');
@@ -16,6 +16,9 @@ OpenMetrics.logEvent({userId: 'foo'}, 'hasCreatedAMessage', {numberOfReceivers: 
 
 // log an event with a number of additional properties
 OpenMetrics.logEvent({userId: 'foo'}, 'hasCreatedAMessage', {numberOfReceivers: 3, isMessageEncrypted: true});
+
+// log an event without flagging the user as active
+OpenMetrics.logEvent({userId: 'foo'}, 'notificationEmailSent', {}, {active: false});
 
 
 // attach one property to a given user

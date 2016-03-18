@@ -41,36 +41,39 @@ module.exports = function(openMetricServerAddress) {
     /*
      * log an event, with optional properties
      * @properties should be a hash of propertyName: propertyValue
+     * @options specify logging options (see https://github.com/gsabran/open-metrics)
      */
-    logEvent: function(identification, eventName, properties) {
+    logEvent: function(identification, eventName, properties, options) {
       var sessionId = abstractIdentification(identification);
 
       var queue = OpenMetrics._eventsQueue;
       queue.events[sessionId] = queue.events[sessionId] || {events: []};
-      queue.events[sessionId].events.push({name: eventName, props: properties, ts: Date.now()});
+      queue.events[sessionId].events.push({name: eventName, props: properties, ts: Date.now(), options: options});
       queue._size += 1;
       OpenMetrics._pingFlush();
     },
 
     /*
      * set the user Id to be use, probably to match the id on your product
+     * @options specify logging options (see https://github.com/gsabran/open-metrics)
      */
-    setUserId: function(sessionId, userId) {
+    setUserId: function(sessionId, userId, options) {
       if (!sessionId)
         throw new Error('a id must be specidied to identify the session');
 
-      OpenMetrics._get('/v1/setUserId', {uid: userId}, sessionId);
+      OpenMetrics._get('/v1/setUserId', {uid: userId, options: options}, sessionId);
       usedSessionIds[userId] = sessionId;
     },
     
     /*
      * attach any number of properties to the current user
      * @properties should be a hash of propertyName: propertyValue
+     * @options specify logging options (see https://github.com/gsabran/open-metrics)
      */
-    setUserProperties: function(identification, properties) {
+    setUserProperties: function(identification, properties, options) {
       var sessionId = abstractIdentification(identification);
 
-      OpenMetrics._get('/v1/setUserProps', {props: properties}, sessionId);
+      OpenMetrics._get('/v1/setUserProps', {props: properties, options: options}, sessionId);
     },
 
 
