@@ -15,9 +15,6 @@
     "type": "git",
     "url": "git+https://github.com/gsabran/openmetrics.git"
   },
-  "dependencies": {
-    "xmlhttprequest": "^1.8.0"
-  },
   "devDependencies": {
     "chai": "^3.5.0"
   },
