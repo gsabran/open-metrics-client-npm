@@ -1,0 +1,37 @@
+A NPM package to send events to an [Open Metrics](https://github.com/gsabran/open-metrics) server from a npm based server
+
+## Example Usage
+
+```js
+var OpenMetrics = require('open-metrics')('http://localhost:3000');
+
+// log an event
+OpenMetrics.logEvent(anIdToIdentifyTheUserSession, 'hasLoggedIn');
+
+// log an event for another session (probably for another user)
+OpenMetrics.logEvent(aDifferentId, 'hasLoggedIn');
+
+// log an event with one additional property
+OpenMetrics.logEvent(anIdToIdentifyTheUserSession, 'hasCreatedAMessage', {numberOfReceivers: 3});
+
+// log an event with a number of additional properties
+OpenMetrics.logEvent(anIdToIdentifyTheUserSession, 'hasCreatedAMessage', {numberOfReceivers: 3, isMessageEncrypted: true});
+
+
+// attach one property to a given user
+OpenMetrics.setUserProperties(anIdToIdentifyTheUserSession, {isSuperCool: true});
+
+// attach several properties to a given user
+OpenMetrics.setUserProperties(anIdToIdentifyTheUserSession, {isSuperCool: true, isPayingUser: false});
+
+// set the id of the user that is linked to the session identified by theIdUsedForThisSession
+OpenMetrics.setUserId(theIdUsedForThisSession, userId);
+```
+
+An error will be thrown if no id is specified to identify the session. If you want to log an anonymous event, generate a random id.
+
+## TODO
+- tests
+
+## Known issues:
+- there is no verification on the length of the get request

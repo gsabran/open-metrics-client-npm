@@ -1,0 +1,31 @@
+{
+  "name": "open-metrics",
+  "description": "An open source metric system with client librairies for sending events, server code to record them and UI interface to query them",
+  "version": "0.0.1",
+  "keywords": [
+    "metrics"
+  ],
+  "author": "Guillaume Sabran",
+  "license": "MIT",
+  "files": [
+    "open-metrics.js"
+  ],
+  "main": "open-metrics.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsabran/openmetrics.git"
+  },
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "test": "tests/tests.js"
+  },
+  "readme": "ERROR: No README data found!"
+}
