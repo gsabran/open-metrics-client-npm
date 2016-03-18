@@ -4,6 +4,33 @@ var http = require('http');
 var URL = require('url');
 
 module.exports = function(openMetricServerAddress) {
+  // keep track of the mapping between user id and session id
+  usedSessionIds = {};
+
+    
+  /*
+   * make it easier to use the api without directly managing session ids
+   * and by passing user ids directly
+   */
+  var abstractIdentification = function(identification) {
+    var userId = identification.userId;
+    if (!identification.sessionId && !userId)
+      throw new Error('a id must be specidied to identify the session or the user');
+    if (!identification.sessionId) {
+      usedSessionIds[userId];
+      if (existingSessionId)
+        identification.sessionId = existingSessionId;
+      else {
+        // automatically creates a session id and attach it to the user ID
+        var sessionId = makeRandomId();
+        identification.sessionId = sessionId;
+        usedSessionIds[userId] = sessionId;
+        OpenMetrics.setUserId(sessionId, userId);
+      }
+    }
+    return identification.sessionId;
+  };
+
   var OpenMetrics = {
     
     /*
@@ -15,9 +42,8 @@ module.exports = function(openMetricServerAddress) {
      * log an event, with optional properties
      * @properties should be a hash of propertyName: propertyValue
      */
-    logEvent: function(sessionId, eventName, properties) {
-      if (!sessionId)
-        throw new Error('a id must be specidied to identify the session');
+    logEvent: function(identification, eventName, properties) {
+      var sessionId = abstractIdentification(identification);
 
       var queue = OpenMetrics._eventsQueue;
       queue.events[sessionId] = queue.events[sessionId] || {events: []};
@@ -34,15 +60,15 @@ module.exports = function(openMetricServerAddress) {
         throw new Error('a id must be specidied to identify the session');
 
       OpenMetrics._get('/v1/setUserId', {uid: userId}, sessionId);
+      usedSessionIds[userId] = sessionId;
     },
     
     /*
      * attach any number of properties to the current user
      * @properties should be a hash of propertyName: propertyValue
      */
-    setUserProperties: function(sessionId, properties) {
-      if (!sessionId)
-        throw new Error('a id must be specidied to identify the session');
+    setUserProperties: function(identification, properties) {
+      var sessionId = abstractIdentification(identification);
 
       OpenMetrics._get('/v1/setUserProps', {props: properties}, sessionId);
     },
