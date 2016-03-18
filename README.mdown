@@ -1,38 +1,45 @@
 A NPM package to send events to an [Open Metrics](https://github.com/gsabran/open-metrics) server from a npm based server
 
+## get it
+
+- add `"open-metrics": "git+https://git@github.com/gsabran/open-metrics-client-npm.git#v0.0.1"` to your `package.json`
+- run `npm install`
+
+
+
 ## Example Usage
 
 ```js
-var OpenMetrics = require('open-metrics')('http://yourOpenMetricsServerUrl.com');
+var openMetrics = require('open-metrics')('http://yourOpenMetricsServerUrl.com');
 
 // log an event
-OpenMetrics.logEvent({userId: 'foo'}, 'hasLoggedIn');
+openMetrics.logEvent({userId: 'foo'}, 'hasLoggedIn');
 
 // log an event for another user
-OpenMetrics.logEvent({userId: 'bar'}, 'hasLoggedIn');
+openMetrics.logEvent({userId: 'bar'}, 'hasLoggedIn');
 
 // log an event with one additional property
-OpenMetrics.logEvent({userId: 'foo'}, 'hasCreatedAMessage', {numberOfReceivers: 3});
+openMetrics.logEvent({userId: 'foo'}, 'hasCreatedAMessage', {numberOfReceivers: 3});
 
 // log an event with a number of additional properties
-OpenMetrics.logEvent({userId: 'foo'}, 'hasCreatedAMessage', {numberOfReceivers: 3, isMessageEncrypted: true});
+openMetrics.logEvent({userId: 'foo'}, 'hasCreatedAMessage', {numberOfReceivers: 3, isMessageEncrypted: true});
 
 // log an event without flagging the user as active
-OpenMetrics.logEvent({userId: 'foo'}, 'notificationEmailSent', {}, {active: false});
+openMetrics.logEvent({userId: 'foo'}, 'notificationEmailSent', {}, {active: false});
 
 
 // attach one property to a given user
-OpenMetrics.setUserProperties({userId: 'foo'}, {isSuperCool: true});
+openMetrics.setUserProperties({userId: 'foo'}, {isSuperCool: true});
 
 // attach several properties to a given user
-OpenMetrics.setUserProperties({userId: 'foo'}, {isSuperCool: true, isPayingUser: false});
+openMetrics.setUserProperties({userId: 'foo'}, {isSuperCool: true, isPayingUser: false});
 
 
 // if there's no available user ID, it's possible to simply use a session ID (that you should create)
-OpenMetrics.logEvent({sessionId: 'guig'}, 'hasLoggedIn');
+openMetrics.logEvent({sessionId: 'guig'}, 'hasLoggedIn');
 
 // and you can latet map this session to a user:
-OpenMetrics.setUserId('guig', 'foo);
+openMetrics.setUserId('guig', 'foo);
 ```
 
 An error will be thrown if no id is specified to identify the session or the user. If you want to log an anonymous event, generate a random id.
