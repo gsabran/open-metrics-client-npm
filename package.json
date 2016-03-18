@@ -16,13 +16,20 @@
     "url": "git+https://github.com/gsabran/openmetrics.git"
   },
   "devDependencies": {
-    "chai": "^3.5.0"
+    "chai": "^3.5.0",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^1.0.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3"
   },
   "engines": {
     "node": ">= 0.10.0"
   },
   "scripts": {
-    "test": "tests/tests.js"
+    "lint": "standard",
+    "test": "node ./node_modules/mocha/bin/mocha",
+    "posttest": "grunt --verbose"
   },
   "readme": "ERROR: No README data found!"
 }

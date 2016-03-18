@@ -1,18 +1,20 @@
-'use strict';
+/*jslint node: true */
+/*jshint -W030 */ // make it ok to do things like `x && x();`
+"use strict";
 
 var http = require('http');
 var URL = require('url');
 
 module.exports = function(openMetricServerAddress) {
   // keep track of the mapping between user id and session id
-  usedSessionIds = {};
+  var usedSessionIds = {};
 
     
   /*
    * make it easier to use the api without directly managing session ids
    * and by passing user ids directly
    */
-  var abstractIdentification = function(identification) {
+  var abstractIdentification = function(identification, options) {
     var userId = identification.userId;
     if (!identification.sessionId && !userId)
       throw new Error('a id must be specidied to identify the session or the user');
@@ -33,13 +35,13 @@ module.exports = function(openMetricServerAddress) {
         var sessionId = makeRandomId();
         identification.sessionId = sessionId;
         usedSessionIds[userId] = sessionId;
-        OpenMetrics.setUserId(sessionId, userId);
+        openMetrics.setUserId(sessionId, userId, options);
       }
     }
     return identification.sessionId;
   };
 
-  var OpenMetrics = {
+  var openMetrics = {
     
     /*
      * Below are functions that can be called directly
@@ -52,13 +54,13 @@ module.exports = function(openMetricServerAddress) {
      * @options specify logging options (see https://github.com/gsabran/open-metrics)
      */
     logEvent: function(identification, eventName, properties, options) {
-      var sessionId = abstractIdentification(identification);
+      var sessionId = abstractIdentification(identification, options);
 
-      var queue = OpenMetrics._eventsQueue;
+      var queue = openMetrics._eventsQueue;
       queue.events[sessionId] = queue.events[sessionId] || {events: []};
       queue.events[sessionId].events.push({name: eventName, props: properties, ts: Date.now(), options: options});
       queue._size += 1;
-      OpenMetrics._pingFlush();
+      openMetrics._pingFlush();
     },
 
     /*
@@ -69,7 +71,7 @@ module.exports = function(openMetricServerAddress) {
       if (!sessionId)
         throw new Error('a id must be specidied to identify the session');
 
-      OpenMetrics._get('/v1/setUserId', {uid: userId, options: options}, sessionId);
+      openMetrics._get('/v1/setUserId', {uid: userId, options: options}, sessionId);
       usedSessionIds[userId] = sessionId;
     },
     
@@ -79,9 +81,9 @@ module.exports = function(openMetricServerAddress) {
      * @options specify logging options (see https://github.com/gsabran/open-metrics)
      */
     setUserProperties: function(identification, properties, options) {
-      var sessionId = abstractIdentification(identification);
+      var sessionId = abstractIdentification(identification, options);
 
-      OpenMetrics._get('/v1/setUserProps', {props: properties, options: options}, sessionId);
+      openMetrics._get('/v1/setUserProps', {props: properties, options: options}, sessionId);
     },
 
 
@@ -134,24 +136,23 @@ module.exports = function(openMetricServerAddress) {
      */
     _pingFlush: function(flushAnyway) {
       var t = Date.now(),
-        lastFlushed = OpenMetrics._lastTimeFlushed;
-      var length = OpenMetrics._eventsQueue._size;
+        lastFlushed = openMetrics._lastTimeFlushed;
+      var length = openMetrics._eventsQueue._size;
 
       // make sure we don't make requests too often
       if (!length || (!flushAnyway && lastFlushed && t - lastFlushed < 1000 && length < 10)) {
         return;
       }
-      console.log('will _pingFlush', OpenMetrics._eventsQueue.events['123']);
-      OpenMetrics._lastTimeFlushed = t;
+      openMetrics._lastTimeFlushed = t;
 
-      for (var sessionId in OpenMetrics._eventsQueue.events)
-        OpenMetrics._get('/v1/events', {events: OpenMetrics._eventsQueue.events[sessionId].events}, sessionId);
-      OpenMetrics._eventsQueue = {_size:0, events: {}};
+      for (var sessionId in openMetrics._eventsQueue.events)
+        openMetrics._get('/v1/events', {events: openMetrics._eventsQueue.events[sessionId].events}, sessionId);
+      openMetrics._eventsQueue = {_size:0, events: {}};
     },
   };
 
   // regularly log events
-  OpenMetrics._pingFlush();
-  setInterval(OpenMetrics._pingFlush, 1000);
-  return OpenMetrics;
+  openMetrics._pingFlush();
+  setInterval(openMetrics._pingFlush, 1000);
+  return openMetrics;
 };
