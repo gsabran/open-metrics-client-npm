@@ -1,7 +1,7 @@
 {
   "name": "open-metrics",
   "description": "An open source metric system with client librairies for sending events, server code to record them and UI interface to query them",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "metrics"
   ],

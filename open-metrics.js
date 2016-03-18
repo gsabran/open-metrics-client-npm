@@ -17,11 +17,19 @@ module.exports = function(openMetricServerAddress) {
     if (!identification.sessionId && !userId)
       throw new Error('a id must be specidied to identify the session or the user');
     if (!identification.sessionId) {
-      usedSessionIds[userId];
+      var existingSessionId = usedSessionIds[userId];
       if (existingSessionId)
         identification.sessionId = existingSessionId;
       else {
         // automatically creates a session id and attach it to the user ID
+        var makeRandomId = function() {
+          // generate a random string
+          var text = "";
+          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          for (var i=0; i < 10; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+          return text;
+        };
         var sessionId = makeRandomId();
         identification.sessionId = sessionId;
         usedSessionIds[userId] = sessionId;

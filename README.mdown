@@ -2,7 +2,7 @@ A NPM package to send events to an [Open Metrics](https://github.com/gsabran/ope
 
 ## get it
 
-- add `"open-metrics": "git+https://git@github.com/gsabran/open-metrics-client-npm.git#v0.0.1"` to your `package.json`
+- add `"open-metrics": "git+https://git@github.com/gsabran/open-metrics-client-npm.git#v0.0.2"` to your `package.json`
 - run `npm install`
 
 
