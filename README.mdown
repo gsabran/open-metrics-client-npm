@@ -39,7 +39,7 @@ openMetrics.setUserProperties({userId: 'foo'}, {isSuperCool: true, isPayingUser:
 openMetrics.logEvent({sessionId: 'guig'}, 'hasLoggedIn');
 
 // and you can latet map this session to a user:
-openMetrics.setUserId('guig', 'foo);
+openMetrics.setUserId('guig', 'foo');
 ```
 
 An error will be thrown if no id is specified to identify the session or the user. If you want to log an anonymous event, generate a random id.
