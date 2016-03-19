@@ -17,7 +17,7 @@ module.exports = function(openMetricServerAddress) {
   var abstractIdentification = function(identification, options) {
     var userId = identification.userId;
     if (!identification.sessionId && !userId)
-      throw new Error('a id must be specidied to identify the session or the user');
+      throw new Error('an id must be specidied to identify the session or the user');
     if (!identification.sessionId) {
       var existingSessionId = usedSessionIds[userId];
       if (existingSessionId)
@@ -69,7 +69,7 @@ module.exports = function(openMetricServerAddress) {
      */
     setUserId: function(sessionId, userId, options) {
       if (!sessionId)
-        throw new Error('a id must be specidied to identify the session');
+        throw new Error('an id must be specidied to identify the session');
 
       openMetrics._get('/v1/setUserId', {uid: userId, options: options}, sessionId);
       usedSessionIds[userId] = sessionId;
@@ -116,11 +116,10 @@ module.exports = function(openMetricServerAddress) {
           body += d;
         });
         res.on('end', function() {
-          console.log('over status:', res.statusCode);
-          console.log('body', body);
-          if (res.statusCode == 200) {
-            callback && callback();
-          }
+          if (res.statusCode !== 200)
+            callback && callback(true);
+          else
+            callback && callback(null, body);
         });
       });
     },

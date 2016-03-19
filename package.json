@@ -17,18 +17,21 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "codecov": "^1.0.1",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^1.0.0",
+    "istanbul": "^0.4.2",
     "mocha": "^2.4.5",
-    "sinon": "^1.17.3"
+    "sinon": "^1.17.3",
+    "stream": "0.0.2"
   },
   "engines": {
     "node": ">= 0.10.0"
   },
   "scripts": {
     "lint": "standard",
-    "test": "node ./node_modules/mocha/bin/mocha",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec && ./node_modules/.bin/codecov",
     "posttest": "grunt --verbose"
   },
   "readme": "ERROR: No README data found!"
