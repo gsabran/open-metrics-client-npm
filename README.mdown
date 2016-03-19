@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/gsabran/open-metrics-client-npm.svg?branch=master)](https://travis-ci.org/gsabran/open-metrics-client-npm)
+[![codecov.io](https://codecov.io/github/gsabran/open-metrics-client-npm/coverage.svg?branch=master)](https://codecov.io/github/gsabran/open-metrics-client-npm?branch=master)
 
 A NPM package to send events to an [Open Metrics](https://github.com/gsabran/open-metrics) server from a npm based server
 
