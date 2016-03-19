@@ -41,7 +41,7 @@ openMetrics.setUserProperties({userId: 'foo'}, {isSuperCool: true, isPayingUser:
 // if there's no available user ID, it's possible to simply use a session ID (that you should create)
 openMetrics.logEvent({sessionId: 'guig'}, 'hasLoggedIn');
 
-// and you can latet map this session to a user:
+// and you can later map this session to a user:
 openMetrics.setUserId('guig', 'foo');
 ```
 
