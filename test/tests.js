@@ -111,6 +111,6 @@ describe("events get logs successfully", function () {
         sessionId: sessionId
       });
       done();
-    }, 2000);
+    }, 4000);
   });
 });
