@@ -47,8 +47,6 @@ openMetrics.setUserId('guig', 'foo');
 
 An error will be thrown if no id is specified to identify the session or the user. If you want to log an anonymous event, generate a random id.
 
-## TODO
-- tests
 
 ## Known issues:
 - there is no verification on the length of the get request
