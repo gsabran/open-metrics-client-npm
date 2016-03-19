@@ -270,6 +270,22 @@ describe("GET requests", function () {
     });
   });
 
+  it("works with no port", function () {
+    openMetrics = require('../open-metrics.js')('http://example.com');
+
+    var payload = {type: 'important'};
+    var sessionId = '123';
+    openMetrics._get('/v1/ping', payload, sessionId);
+
+    var requestArgs = this.get.getCall(0).args;
+    payload.sessionId = sessionId;
+    expect(requestArgs[0]).to.be.deep.equal({
+      host: 'example.com',
+      port: 80,
+      path: '/v1/ping?q='+JSON.stringify(payload),
+    });
+  });
+
   it("call the callback on success with no error", function(done) {
     var response = new PassThrough();
     response.statusCode = 200;
