@@ -9,7 +9,6 @@ A npm package to send events to an [Open Metrics](https://github.com/gsabran/ope
 - run `npm install`
 
 
-
 ## Example Usage
 
 ```js
